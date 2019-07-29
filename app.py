@@ -1,35 +1,46 @@
 from flask import Flask
 # 从flask引入request实例
-from flask import request, url_for
+from flask import request, url_for, render_template
+from modules import User
+
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return 'hello world'
 
-# 换请求方式
-@app.route('/user', methods=['POST'])
-def hello_user():
-    return 'Hello User!'
+# 引入类
+@app.route('/user')
+def user():
+    user = User(10001, "alex")
+    return render_template('user_index.html', user=user)
 
-# 传递参数
-@app.route('/user/<id>')
-def hello_id(id):
-    return 'Hello id:{}'.format(id)
+# 模版中的参数传递
+@app.route('/query_id/<id>')
+def user_id(id):
+    user = None
+    if int(id) == 1:
+        user = User(1, 'hahahhaha')
 
-@app.route('/query_user')
-def query_id():
-    id = request.args.get('id')
-    # 访问：http://127.0.0.1:5000/query_user?id=12345
-    return 'query_user id:{}'.format(id)
+    return render_template('user_id.html', user=user)
 
-# 方向路由：通过视图函数，反找出url地址
-@app.route('/query_url')
-def query_url():
-    # 访问：http://127.0.0.1:5000/query_url
-    return 'query_url:{}'.format(url_for('query_id'))
+@app.route('/users')
+def user_list():
+    user_li = []
+    for i in range(10):
+        user = User(i, "haha_{}".format(str(i)))
+        user_li.append(user)
+    return render_template('user_list.html', user_li=user_li)
+
+@app.route('/base_one')
+def base_one():
+    return render_template('base_one.html')
+
+@app.route('/base_two')
+def base_two():
+    return render_template('base_two.html')
 
 if __name__ == '__main__':
     app.run()
