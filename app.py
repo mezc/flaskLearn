@@ -1,46 +1,44 @@
 from flask import Flask
 # 从flask引入request实例
-from flask import request, url_for, render_template
-from modules import User
-
+from flask import flash, render_template, request, abort
 
 app = Flask(__name__)
-
+# 使用flash时，需要使用app.secret_key='123'加密
+app.secret_key = "123"
 
 @app.route('/')
 def hello_world():
-    return 'hello world'
+    flash('hahahha')
+    return render_template('index.html')
 
-# 引入类
-@app.route('/user')
-def user():
-    user = User(10001, "alex")
-    return render_template('user_index.html', user=user)
+@app.route('/login', methods=['POST'])
+def login():
+    form = request.form
+    username = form.get('username')
+    password = form.get('password')
+    if not username:
+        flash('please input username')
+        return render_template('index.html')
+    if not password:
+        flash('please input password')
+        return render_template('index.html')
+    if username == 'haha' and password == '123':
+        flash('login success')
+        return render_template('index.html')
+    else:
+        flash('usename or password is wrong')
+        return render_template('index.html')
 
-# 模版中的参数传递
-@app.route('/query_id/<id>')
-def user_id(id):
-    user = None
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html')
+
+@app.route('/<id>')
+def user(id):
     if int(id) == 1:
-        user = User(1, 'hahahhaha')
-
-    return render_template('user_id.html', user=user)
-
-@app.route('/users')
-def user_list():
-    user_li = []
-    for i in range(10):
-        user = User(i, "haha_{}".format(str(i)))
-        user_li.append(user)
-    return render_template('user_list.html', user_li=user_li)
-
-@app.route('/base_one')
-def base_one():
-    return render_template('base_one.html')
-
-@app.route('/base_two')
-def base_two():
-    return render_template('base_two.html')
+        return render_template('user.html')
+    else:
+        abort(404)
 
 if __name__ == '__main__':
     app.run()
