@@ -1,7 +1,6 @@
-#!/usr/bin/python
-#coding:utf-8
 from flask import Flask
 from flask import request, render_template, flash, redirect
+from db import *
 
 # 创建实例
 app = Flask(__name__)
@@ -21,6 +20,16 @@ def login():
         else:
             message = "login failed"
             return render_template('index.html', message=message)
+    else:
+        return render_template('index.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    if request.method == 'POST':
+        addUser(username, password)
+        return "register successfully"
     else:
         return render_template('index.html')
 
