@@ -15,7 +15,7 @@ test：测试文件
 
 ###
 file:
-config.py: 应用的基本属性
+config.py: 应用的基本属性//配置mongo
 manage.py: web脚本
 run.py: 运行脚本
 ###
