@@ -1,9 +1,9 @@
 from flask import Flask
-from flask.ext.mongoengine import MongoEngine
+from flask_mongoengine import MongoEngine
 
 app = Flask(__name__)
 
-app.config['MONGODB_SETTINGS'] = {'db': 'jikeuxueyuan'}
+app.config['MONGODB_SETTINGS'] = {'db': 'jike'}
 
 db = MongoEngine(app)
 
